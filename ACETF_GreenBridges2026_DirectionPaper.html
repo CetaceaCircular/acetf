@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACETF — Green Bridges 2026 Direction Paper</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal:#0B5E54; --teal-mid:#1D9E75; --teal-light:#E0F5EE; --teal-pale:#F0FAF6;
+  --amber:#C27B1A; --amber-light:#FDF3E0;
+  --slate:#2C3E35; --mid:#4A5E55; --muted:#7A8C84;
+  --rule:#D5E5DF; --bg:#F7FAF8; --white:#FFFFFF;
+  --serif:'DM Serif Display',Georgia,serif;
+  --sans:'DM Sans',system-ui,sans-serif;
+  --mono:'DM Mono',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--bg);color:var(--slate);font-size:15px;line-height:1.7}
+
+/* PASSWORD */
+#pw-overlay{position:fixed;inset:0;z-index:9999;background:var(--teal);display:flex;align-items:center;justify-content:center}
+#pw-box{background:white;border-radius:16px;padding:48px 52px;width:380px;text-align:center}
+#pw-logo{font-family:var(--serif);font-size:22px;color:var(--teal);margin-bottom:6px}
+#pw-sub{font-family:var(--sans);font-size:13px;color:var(--muted);margin-bottom:32px}
+#pw-input{width:100%;padding:12px 16px;border:1px solid var(--rule);border-radius:8px;font-size:15px;font-family:var(--mono);text-align:center;letter-spacing:.12em;outline:none;margin-bottom:12px;color:var(--slate)}
+#pw-input:focus{border-color:var(--teal-mid)}
+#pw-btn{width:100%;padding:12px;background:var(--teal);color:white;border:none;border-radius:8px;font-size:14px;font-family:var(--sans);font-weight:500;cursor:pointer;transition:background .2s}
+#pw-btn:hover{background:var(--teal-mid)}
+#pw-err{font-size:12px;color:var(--amber);margin-top:10px;min-height:16px}
+
+/* COVER */
+.cover{background:var(--teal);color:white;padding:80px 60px 60px;position:relative;overflow:hidden}
+.cover::before{content:'';position:absolute;top:-80px;right:-80px;width:400px;height:400px;border-radius:50%;border:1px solid rgba(255,255,255,0.08)}
+.cover::after{content:'';position:absolute;bottom:20px;left:-60px;width:280px;height:280px;border-radius:50%;border:1px solid rgba(255,255,255,0.06)}
+.cover-tag{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-bottom:32px;display:flex;align-items:center;gap:12px}
+.cover-tag::before{content:'';display:inline-block;width:24px;height:1px;background:rgba(255,255,255,0.35)}
+.cover-title{font-family:var(--serif);font-size:clamp(34px,5vw,54px);line-height:1.1;margin-bottom:12px;max-width:720px}
+.cover-sub2{font-size:15px;font-weight:400;color:rgba(255,255,255,0.65);margin-bottom:10px;font-style:italic}
+.cover-subtitle{font-size:17px;font-weight:300;color:rgba(255,255,255,0.75);margin-bottom:44px;max-width:600px}
+.cover-meta{display:flex;gap:36px;flex-wrap:wrap}
+.cover-meta-item{display:flex;flex-direction:column;gap:4px}
+.cover-meta-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,0.45)}
+.cover-meta-value{font-size:13px;font-weight:500;color:rgba(255,255,255,0.9)}
+.cover-stripe{height:4px;background:linear-gradient(90deg,var(--teal-mid),rgba(29,158,117,0.3));margin-top:48px}
+
+/* NAV */
+.nav{background:white;border-bottom:1px solid var(--rule);padding:0 60px;display:flex;position:sticky;top:0;z-index:100;overflow-x:auto}
+.nav-item{font-size:12px;font-weight:500;color:var(--muted);padding:14px 16px;cursor:pointer;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;white-space:nowrap;text-decoration:none}
+.nav-item:hover{color:var(--teal);border-bottom-color:var(--teal-mid)}
+
+/* LAYOUT */
+.content{max-width:980px;margin:0 auto;padding:60px 40px 100px}
+.section{margin-bottom:68px}
+.section-header{display:flex;align-items:flex-start;gap:20px;margin-bottom:28px}
+.section-num{font-family:var(--mono);font-size:11px;color:var(--teal-mid);padding-top:6px;min-width:28px}
+.section-title{font-family:var(--serif);font-size:30px;color:var(--teal);line-height:1.15}
+.sub-title{font-family:var(--serif);font-size:19px;color:var(--slate);margin:28px 0 10px;padding-left:48px}
+p{color:var(--mid);margin-bottom:12px;padding-left:48px}
+strong{color:var(--slate)}
+
+/* CALLOUTS */
+.callout{border-left:3px solid var(--teal-mid);background:var(--teal-light);padding:14px 18px;margin:20px 0 20px 48px;border-radius:0 6px 6px 0}
+.callout p{padding-left:0;margin-bottom:0;font-size:14px;color:var(--teal);font-style:italic}
+.callout-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--teal-mid);margin-bottom:6px;font-style:normal}
+
+.thesis-box{background:var(--teal);border-radius:10px;padding:22px 28px;margin:20px 0 20px 48px}
+.thesis-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#9FE1CB;margin-bottom:8px}
+.thesis-text{font-size:14px;color:#E0F5EE;line-height:1.7}
+.thesis-text strong{color:white}
+
+.anchor-box{background:var(--amber-light);border:1px solid #E8C07A;border-radius:10px;padding:18px 22px;margin:20px 0 20px 48px}
+.anchor-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:6px}
+.anchor-box p{padding-left:0;color:#6B4800;font-size:14px;margin-bottom:0}
+
+/* BULLET */
+.bullet-list{list-style:none;padding-left:48px;margin-bottom:12px}
+.bullet-list li{padding:5px 0 5px 18px;position:relative;color:var(--mid);font-size:14.5px}
+.bullet-list li::before{content:'';position:absolute;left:0;top:15px;width:6px;height:6px;border-radius:50%;background:var(--teal-mid)}
+.bullet-list li strong{color:var(--slate)}
+
+/* ECONOMICS PANEL */
+.econ-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding-left:48px;margin:20px 0 24px}
+.econ-card{background:white;border:1px solid var(--rule);border-radius:10px;overflow:hidden}
+.econ-header{background:var(--teal);color:white;padding:10px 16px;font-size:12px;font-weight:500;display:flex;align-items:center;justify-content:space-between}
+.econ-header-label{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,0.6)}
+.econ-rows{padding:0}
+.econ-row{display:flex;justify-content:space-between;align-items:baseline;padding:9px 16px;border-bottom:1px solid var(--rule);font-size:13px}
+.econ-row:last-child{border-bottom:none}
+.econ-key{color:var(--mid);flex:1;padding-right:12px}
+.econ-val{font-family:var(--mono);font-size:12px;font-weight:500;color:var(--teal);white-space:nowrap}
+.econ-val.amber{color:var(--amber)}
+.econ-val.strong{color:var(--slate)}
+
+/* TRIANGLE */
+.triangle-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding-left:48px;margin:16px 0 20px}
+.tri-card{background:white;border:1px solid var(--rule);border-radius:10px;padding:16px}
+.tri-flag{font-size:20px;margin-bottom:8px}
+.tri-title{font-size:13px;font-weight:600;color:var(--slate);margin-bottom:6px}
+.tri-body{font-size:12px;color:var(--muted);line-height:1.5}
+.tri-need{margin-top:8px;padding-top:8px;border-top:1px solid var(--rule);font-size:11px;color:var(--teal);font-weight:500}
+
+/* INFRA BOX */
+.infra-box{padding-left:48px;margin:16px 0 24px}
+.infra-inner{background:white;border:1px solid var(--rule);border-radius:10px;overflow:hidden}
+.infra-hdr{background:#1a2e28;color:#9FE1CB;padding:10px 18px;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase}
+.infra-cells{display:grid;grid-template-columns:repeat(3,1fr)}
+.infra-cell{padding:14px 18px;border-right:1px solid var(--rule)}
+.infra-cell:last-child{border-right:none}
+.infra-num{font-family:var(--mono);font-size:22px;font-weight:600;color:var(--teal);line-height:1.2;margin-bottom:2px}
+.infra-unit{font-size:11px;color:var(--muted);margin-bottom:6px}
+.infra-label{font-size:12px;font-weight:600;color:var(--slate);margin-bottom:2px}
+.infra-desc{font-size:11px;color:var(--muted);line-height:1.4}
+.infra-note{padding:10px 18px;border-top:1px solid var(--rule);font-size:11.5px;color:var(--muted);font-style:italic}
+
+/* COMMITTEE GRID */
+.committee-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;padding-left:48px;margin-bottom:28px}
+.member-card{background:white;border:1px solid var(--rule);border-radius:10px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start}
+.member-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0;font-family:var(--mono)}
+.member-name{font-size:13px;font-weight:600;color:var(--slate);line-height:1.3}
+.member-role{font-size:11.5px;color:var(--muted);line-height:1.4;margin-top:2px}
+.chair-badge{font-size:10px;background:var(--teal-light);color:var(--teal);padding:1px 6px;border-radius:10px;font-weight:600;vertical-align:middle;margin-left:4px}
+
+/* SESSION TABLE */
+.day-header{background:var(--teal);color:white;padding:14px 18px;border-radius:10px 10px 0 0;display:flex;justify-content:space-between;align-items:center}
+.day-label{font-family:var(--serif);font-size:19px}
+.day-theme{font-size:11.5px;color:rgba(255,255,255,0.6);font-style:italic;max-width:380px;text-align:right;line-height:1.4}
+.session-table{width:100%;border-collapse:collapse;background:white;border:1px solid var(--rule);border-top:none;border-radius:0 0 10px 10px;overflow:hidden;margin-bottom:28px;font-size:13px}
+.session-table th{background:#F0F5F3;color:var(--muted);font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-family:var(--mono);padding:9px 14px;text-align:left;font-weight:500;border-bottom:1px solid var(--rule)}
+.session-table td{padding:12px 14px;vertical-align:top;border-bottom:1px solid var(--rule);color:var(--mid)}
+.session-table tr:last-child td{border-bottom:none}
+.session-table tr:hover td{background:var(--teal-pale)}
+.time-col{width:70px;font-family:var(--mono);font-size:11px;color:var(--muted);white-space:nowrap}
+.session-title{font-weight:600;color:var(--slate);margin-bottom:4px;font-size:13.5px}
+.session-desc{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:0}
+.standards-note{font-size:11px;color:var(--teal);font-style:italic;margin-top:5px;padding-top:5px;border-top:1px dashed var(--rule)}
+.standards-note::before{content:'⬡ Standards thread: ';font-style:normal;font-weight:600}
+.money-note{font-size:11px;color:var(--amber);margin-top:3px}
+.money-note::before{content:'$ ';font-weight:700}
+.session-break td{background:#F9FBF9 !important}
+.break-label{font-size:11.5px;color:#B0C0BA;font-style:italic}
+.lead-chips{display:flex;flex-wrap:wrap;gap:3px;margin-top:5px}
+.chip{font-size:10.5px;padding:2px 7px;border-radius:20px;font-weight:500;white-space:nowrap}
+.chip-c{background:var(--teal-light);color:var(--teal);font-family:var(--mono);font-size:10px}
+.chip-x{background:#F0F0EC;color:#6B7280}
+.chip-k{background:var(--amber-light);color:var(--amber)}
+
+/* FRAMING CARDS */
+.framing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding-left:48px;margin:16px 0 20px}
+.framing-card{background:white;border:1px solid var(--rule);border-radius:10px;padding:16px}
+.framing-num{font-family:var(--mono);font-size:10px;color:var(--teal-mid);margin-bottom:6px;text-transform:uppercase}
+.framing-title{font-size:13px;font-weight:600;color:var(--slate);margin-bottom:6px;line-height:1.3}
+.framing-desc{font-size:12px;color:var(--muted);line-height:1.5}
+
+/* QUESTIONS */
+.question-card{background:white;border:1px solid var(--rule);border-radius:10px;overflow:hidden;margin-left:48px}
+.question-item{display:flex;gap:14px;padding:16px 18px;border-bottom:1px solid var(--rule);align-items:flex-start}
+.question-item:last-child{border-bottom:none}
+.question-num{width:26px;height:26px;border-radius:50%;background:var(--teal);color:white;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--mono)}
+.question-text{font-size:13.5px;color:var(--mid);line-height:1.6}
+.question-text strong{color:var(--slate)}
+
+.footer{background:var(--teal);color:rgba(255,255,255,0.6);text-align:center;padding:24px 40px;font-size:11px;font-family:var(--mono);letter-spacing:.04em}
+
+@media print{.nav,#pw-overlay{display:none}.cover{padding:40px}.section{page-break-inside:avoid}}
+</style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="pw-overlay">
+  <div id="pw-box">
+    <div id="pw-logo">Green Bridges 2026</div>
+    <div id="pw-sub">Australia–China Energy Transition Forum<br>Committee Direction Paper — April 2026</div>
+    <input id="pw-input" type="password" placeholder="Enter access code" onkeydown="if(event.key==='Enter')checkPw()">
+    <button id="pw-btn" onclick="checkPw()">Access document</button>
+    <div id="pw-err"></div>
+  </div>
+</div>
+<script>
+function checkPw(){
+  if(document.getElementById('pw-input').value.trim().toUpperCase()==='ACETF'){
+    document.getElementById('pw-overlay').style.display='none';
+  } else {
+    document.getElementById('pw-err').textContent='Incorrect — please try again.';
+    document.getElementById('pw-input').value='';
+    document.getElementById('pw-input').focus();
+  }
+}
+</script>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-tag">Draft — For Managing Committee Discussion Only</div>
+  <h1 class="cover-title">Green Bridges 2026<br>Green Iron &amp; Sustainable Aviation Fuel</h1>
+  <p class="cover-sub2">A joint ACETF / Australia–China SAF Forum initiative</p>
+  <p class="cover-subtitle">Energy transition cannot power green trade and investment without aligned standards. This forum makes that case with practical economics — and charts a path to close the gap.</p>
+  <div class="cover-meta">
+    <div class="cover-meta-item">
+      <span class="cover-meta-label">Forum</span>
+      <span class="cover-meta-value">Australia–China Energy Transition Forum (ACETF)</span>
+    </div>
+    <div class="cover-meta-item">
+      <span class="cover-meta-label">Under the auspices of</span>
+      <span class="cover-meta-value">International Society for Energy Transition Studies (ISETS)</span>
+    </div>
+    <div class="cover-meta-item">
+      <span class="cover-meta-label">Venue</span>
+      <span class="cover-meta-value">Adelaide, South Australia</span>
+    </div>
+    <div class="cover-meta-item">
+      <span class="cover-meta-label">Dates</span>
+      <span class="cover-meta-value">19–20 November 2026</span>
+    </div>
+    <div class="cover-meta-item">
+      <span class="cover-meta-label">Prepared by</span>
+      <span class="cover-meta-value">Anthony Coles, ACETF Program Committee Chair</span>
+    </div>
+  </div>
+  <div class="cover-stripe"></div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <a class="nav-item" href="#purpose">Purpose</a>
+  <a class="nav-item" href="#economics">The $$ Case</a>
+  <a class="nav-item" href="#nexus">Standards Nexus</a>
+  <a class="nav-item" href="#triangle">AU–CN–EU</a>
+  <a class="nav-item" href="#committee">Committee</a>
+  <a class="nav-item" href="#day1">Day 1</a>
+  <a class="nav-item" href="#day2">Day 2</a>
+  <a class="nav-item" href="#questions">Questions</a>
+</nav>
+
+<div class="content">
+
+<!-- 01 PURPOSE -->
+<section class="section" id="purpose">
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <h2 class="section-title">Purpose of This Paper</h2>
+  </div>
+  <p>This paper is a direction document, not a final conference program. It is intended to prompt committee discussion on the themes, sequencing, and structure of <strong>Green Bridges 2026</strong> — and to invite each member to contribute their expertise to the session where they can have most impact.</p>
+  <p><strong>Energy transition is the subject. Standards interoperability is the mechanism. Australian industry contribution is the opportunity.</strong></p>
+  <p>Two sectors anchor the program as co-equal pillars:</p>
+  <ul class="bullet-list">
+    <li><strong>Green Iron (HBI/DRI)</strong> — Australia's iron ore and renewable energy endowment makes it the natural production base for hydrogen-based direct reduced iron. The SA–Shandong collaboration is a live proof of concept with Australian Treasury and FIRB already signalling welcome.</li>
+    <li><strong>Sustainable Aviation Fuel (SAF)</strong> — South Australia's direct airline connections to China (China Southern, China Eastern, Cathay Pacific) create an immediate, quantifiable CORSIA carbon liability and a concrete feedstock supply opportunity that puts SA at the centre of bilateral SAF collaboration.</li>
+  </ul>
+  <p>The proposed program is organised around three foundations:</p>
+  <ul class="bullet-list">
+    <li><strong>Standards interoperability as the explicit through-line</strong> of the entire forum — not one session among many, but the precondition for capital to move and trade to flow</li>
+    <li><strong>Practical economics throughout</strong> — $/tCO2e liabilities, CapEx requirements, and the trade benefit from standards alignment are stated in every session, not just implied</li>
+    <li><strong>Chinese regulatory requirements as the new framing</strong> for the AU–China relationship — not about selling, but about collaborating on carbon transparency across the AU–CN–EU triangle</li>
+  </ul>
+  <div class="callout">
+    <div class="callout-label">Committee ask</div>
+    <p>Members are asked to: (1) respond with suggested adjustments to the thematic framing; (2) confirm or propose an alternative for their suggested session role; and (3) identify one speaker or institution from their network for each session they lead. Respond to <strong>anthony@cetacea.global</strong></p>
+  </div>
+</section>
+
+<!-- 02 PRACTICAL ECONOMICS -->
+<section class="section" id="economics">
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <h2 class="section-title">The Practical Economic Case</h2>
+  </div>
+  <p>The forum must be grounded in real numbers. Both sectors carry quantifiable carbon liabilities today — and the value of standards alignment is not abstract. These figures should open every relevant session.</p>
+
+  <div class="econ-grid">
+    <div class="econ-card">
+      <div class="econ-header">
+        <span>Green Iron — Carbon Liability &amp; Opportunity</span>
+        <span class="econ-header-label">HBI / DRI</span>
+      </div>
+      <div class="econ-rows">
+        <div class="econ-row"><span class="econ-key">CBAM liability — conventional steel to EU</span><span class="econ-val amber">~€99 / tonne</span></div>
+        <div class="econ-row"><span class="econ-key">Emissions reduction — green HBI vs BF-BOF</span><span class="econ-val">~95%</span></div>
+        <div class="econ-row"><span class="econ-key">CBAM liability — certified green HBI to EU</span><span class="econ-val">~€5 / tonne</span></div>
+        <div class="econ-row"><span class="econ-key">Green premium value (est.)</span><span class="econ-val">A$100–200 / tonne</span></div>
+        <div class="econ-row"><span class="econ-key">SA opportunity — Superpower Institute</span><span class="econ-val strong">A$386 billion</span></div>
+        <div class="econ-row"><span class="econ-key">CapEx — 1 Mt/yr green HBI precinct</span><span class="econ-val">A$7–12 billion</span></div>
+        <div class="econ-row"><span class="econ-key">Renewable energy required</span><span class="econ-val">3+ TWh / year</span></div>
+        <div class="econ-row"><span class="econ-key">Cost of no standards mutual recognition</span><span class="econ-val amber">10–15% price discount</span></div>
+      </div>
+    </div>
+    <div class="econ-card">
+      <div class="econ-header">
+        <span>Sustainable Aviation Fuel — SA Route Economics</span>
+        <span class="econ-header-label">CORSIA</span>
+      </div>
+      <div class="econ-rows">
+        <div class="econ-row"><span class="econ-key">China Southern: Adelaide–Guangzhou (direct)</span><span class="econ-val">3×/week</span></div>
+        <div class="econ-row"><span class="econ-key">CO₂ per flight (est. ~12,000 km sector)</span><span class="econ-val">~85–95 tCO₂</span></div>
+        <div class="econ-row"><span class="econ-key">CORSIA liability — China Southern ADL routes</span><span class="econ-val amber">~A$1M+ / year</span></div>
+        <div class="econ-row"><span class="econ-key">All China–Australia aviation CO₂ (annual)</span><span class="econ-val">~1M tCO₂</span></div>
+        <div class="econ-row"><span class="econ-key">CORSIA offset cost (2024–2035 phase)</span><span class="econ-val">US$50–100 / tCO₂</span></div>
+        <div class="econ-row"><span class="econ-key">SAF lifecycle emission reduction</span><span class="econ-val">70–80%</span></div>
+        <div class="econ-row"><span class="econ-key">SAF premium vs conventional jet fuel</span><span class="econ-val amber">~3–4× price</span></div>
+        <div class="econ-row"><span class="econ-key">SA feedstock opportunity (tallow, WCO, crops)</span><span class="econ-val strong">Significant &amp; underutilised</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="anchor-box">
+    <div class="anchor-label">Why Adelaide is the right venue for a SAF forum</div>
+    <p>China Southern Airlines operates direct Adelaide–Guangzhou services. China Eastern and Cathay Pacific serve Adelaide–China routes. These carriers are CORSIA signatories with real and growing carbon liabilities on exactly these routes. South Australia has the feedstocks — tallow from its livestock industry, waste cooking oils, agricultural residues — and the renewable energy to process them. The SAF certification gap (ISCC vs Chinese scheme vs CORSIA) is the specific standards problem that is preventing South Australian feedstocks from flowing into Chinese airline SAF programs. Green Bridges 2026 is the platform to close it.</p>
+  </div>
+
+  <h3 class="sub-title">The investment unlock from standards alignment</h3>
+  <p>These numbers frame the stakes. But the practical argument for the forum is simpler: Chinese industrial capital will not move upstream to Australian green industries without certification frameworks it recognises. Australian green industries will not achieve EU CBAM exemption without carbon accounting that satisfies EU requirements. And no Australian producer can cost-effectively maintain separate certifications for three markets.</p>
+  <p>Standards mutual recognition — ACCU + GB/T + ISO 14064 — is not a compliance exercise. It is the architecture that makes AU–CN–EU green trade commercially viable. <strong>Every dollar of the A$386 billion green iron opportunity, and every tonne of SAF that could flow from South Australian feedstocks, depends on closing this gap.</strong></p>
+</section>
+
+<!-- 03 STANDARDS NEXUS -->
+<section class="section" id="nexus">
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <h2 class="section-title">The Standards–Capital Nexus</h2>
+  </div>
+
+  <div class="thesis-box">
+    <div class="thesis-label">Core thesis</div>
+    <div class="thesis-text">China has trillions of renminbi earmarked for industrial decarbonisation — in steel, cement, chemicals, aviation, and shipping. A material share of that capital needs to flow upstream to secure certified green feedstocks: iron ore, hydrogen, SAF, and ammonia. Australia is the natural supplier. But without standards interoperability — without shared or mutually recognised frameworks for carbon accounting, product carbon footprints, and supply chain certification — <strong>that money cannot move</strong>. The capital is willing. The standards gap is the barrier. This forum exists to close it.</div>
+  </div>
+
+  <p style="margin-top:20px">The question in each session is not only 'how does this sector work?' but: <em>what specific standards gap is preventing Chinese industrial decarbonisation capital from flowing to this Australian sector, and what would it take to close it?</em></p>
+
+  <h3 class="sub-title">China's Ecological &amp; Environmental Code — the Australian intelligence gap</h3>
+  <p>China's Ecological &amp; Environmental Code (effective August 2026) consolidates over 30 environmental laws into a unified framework. For the first time, Dual Carbon goals are binding law — with statutory carbon markets, mandatory carbon footprint management, and green supply chain requirements embedded throughout.</p>
+  <p>Outside China, awareness of this legislation is close to zero. Australian companies supplying into Chinese industrial value chains — or seeking Chinese investment — will increasingly be required to meet Code standards without knowing what those standards are. <strong>ACETF has an opportunity to be the platform that closes this intelligence gap. No other AU–China dialogue mechanism is currently positioned to do this.</strong></p>
+
+  <div class="framing-grid">
+    <div class="framing-card">
+      <div class="framing-num">Market access</div>
+      <div class="framing-title">Chinese procurement will require Code compliance</div>
+      <div class="framing-desc">Australian iron ore, hydrogen, and SAF suppliers who cannot demonstrate Code-aligned carbon accounting will lose procurement opportunities to compliant suppliers elsewhere — without ever knowing why.</div>
+    </div>
+    <div class="framing-card">
+      <div class="framing-num">Investment flow</div>
+      <div class="framing-title">Chinese FDI is increasingly standards-contingent</div>
+      <div class="framing-desc">Chinese outbound investors need confidence that Australian projects will be certifiable under Chinese frameworks. Where GB/T and ISO diverge, investment decisions stall. Certainty is a prerequisite for capital movement.</div>
+    </div>
+    <div class="framing-card">
+      <div class="framing-num">Competitive moat</div>
+      <div class="framing-title">First-mover advantage in mutual recognition</div>
+      <div class="framing-desc">An Australian green iron producer certifiable under both ACCU methodology and GB/T carbon accounting commands a premium and eliminates re-certification costs competitors bear. Getting there first, and getting there together, is the strategic play.</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-label">Suggested keynote framing</div>
+    <p>'The Code You Have Never Heard Of — And Why It Will Determine Whether Australia Wins or Loses the Green Economy.' This positions ACETF as providing intelligence, not just networking.</p>
+  </div>
+</section>
+
+<!-- 04 AU-CN-EU TRIANGLE -->
+<section class="section" id="triangle">
+  <div class="section-header">
+    <span class="section-num">04</span>
+    <h2 class="section-title">The AU–CN–EU Carbon Transparency Triangle</h2>
+  </div>
+  <p>This forum is not about bilateral trade in the traditional sense. It is about positioning Australian industry at the centre of a trilateral carbon transparency architecture — where Chinese industrial regulatory requirements and EU border carbon mechanisms both converge on the need for certified, traceable, low-carbon products.</p>
+
+  <div class="triangle-grid">
+    <div class="tri-card">
+      <div class="tri-flag">🇨🇳</div>
+      <div class="tri-title">China — the buyer and investor</div>
+      <div class="tri-body">Chinese industry faces Dual Carbon obligations. Ecological Code mandates supply chain carbon footprint management. Steel, aviation, and chemical sectors need certified low-carbon inputs to meet GB/T standards and ETS compliance requirements.</div>
+      <div class="tri-need">Needs: GB/T-aligned carbon accounting; PCF certification; green supply chain traceability</div>
+    </div>
+    <div class="tri-card">
+      <div class="tri-flag">🇦🇺</div>
+      <div class="tri-title">Australia — the supplier</div>
+      <div class="tri-body">Australia has the iron ore, renewable energy, agricultural feedstocks, and rule-of-law environment. But it currently certifies under ACCU and ISO frameworks. Without mutual recognition, Australian producers carry triple compliance costs to access CN and EU markets simultaneously.</div>
+      <div class="tri-need">Needs: ACCU + GB/T + ISO mutual recognition; third-party verification accepted in all three markets</div>
+    </div>
+    <div class="tri-card">
+      <div class="tri-flag">🇪🇺</div>
+      <div class="tri-title">Europe — the CBAM lever</div>
+      <div class="tri-body">EU CBAM creates a carbon price signal that flows back through global steel supply chains. Chinese steel producers facing CBAM need green inputs certified to EU-acceptable standards. This creates Chinese demand for Australian green iron — if the certification is right.</div>
+      <div class="tri-need">Needs: ISO 14064 / EU-accepted MRV; CBAM-compliant embedded carbon documentation</div>
+    </div>
+  </div>
+
+  <div class="thesis-box">
+    <div class="thesis-label">The opportunity</div>
+    <div class="thesis-text">An Australian green iron producer certified under ACCU + GB/T + ISO 14064 simultaneously satisfies: Chinese Ecological Code procurement requirements, Chinese ETS compliance inputs, and EU CBAM exemption. <strong>This triple certification is the competitive moat that makes Australian green iron commercially dominant</strong> — but it requires ACETF to broker the mutual recognition framework between the three systems. The same logic applies to SAF: CORSIA + Chinese certification + ISCC mutual recognition unlocks South Australian feedstocks for every China-route carrier.</div>
+  </div>
+</section>
+
+<!-- 05 COMMITTEE -->
+<section class="section" id="committee">
+  <div class="section-header">
+    <span class="section-num">05</span>
+    <h2 class="section-title">Managing Committee — Session Assignments</h2>
+  </div>
+  <p>Session leadership is mapped to committee members by expertise. These are suggestions — members should propose alternatives or flag where they can add more value.</p>
+
+  <div class="committee-grid">
+    <div class="member-card">
+      <div class="member-avatar" style="background:#FBEAF0;color:#72243E">AC</div>
+      <div>
+        <div class="member-name">Anthony Coles <span class="chair-badge">Chair</span></div>
+        <div class="member-role">Cetacea Circular, CEO · Co-founder ACETF · Circular economy, carbon financial instruments, EPC project delivery · China Ecological Code (SMI/SCMI), GPIPC Green Factory certification, PCF standards</div>
+      </div>
+    </div>
+    <div class="member-card">
+      <div class="member-avatar" style="background:#E1F5EE;color:#085041">RS</div>
+      <div>
+        <div class="member-name">Roc Shi 史训鹏</div>
+        <div class="member-role">UTS / ISETS President · Co-founder ACETF · Energy economics, sustainable finance, industrial decarbonisation</div>
+      </div>
+    </div>
+    <div class="member-card">
+      <div class="member-avatar" style="background:#FAECE7;color:#712B13">HS</div>
+      <div>
+        <div class="member-name">Huw Slater</div>
+        <div class="member-role">ClientEarth (China) · Carbon markets, Chinese energy policy, ETS frameworks</div>
+      </div>
+    </div>
+    <div class="member-card">
+      <div class="member-avatar" style="background:#EAF3DE;color:#27500A">YZ</div>
+      <div>
+        <div class="member-name">Yuyu Zhang</div>
+        <div class="member-role">QUT · Disclosure, assurance, MRV frameworks, industry connection</div>
+      </div>
+    </div>
+    <div class="member-card">
+      <div class="member-avatar" style="background:#E6F1FB;color:#0C447C">CW</div>
+      <div>
+        <div class="member-name">Caroline Wang 王涵</div>
+        <div class="member-role">UNSW · Chinese clean-tech FDI, solar technology, investment facilitation</div>
+      </div>
+    </div>
+    <div class="member-card">
+      <div class="member-avatar" style="background:#EEF0FE;color:#3C3489">HT</div>
+      <div>
+        <div class="member-name">Hao Tan</div>
+        <div class="member-role">U Nottingham Ningbo · China energy policy, Chinese energy firms, green tech and innovation</div>
+      </div>
+    </div>
+    <div class="member-card">
+      <div class="member-avatar" style="background:#FDF3E0;color:#7A4A00">SZ</div>
+      <div>
+        <div class="member-name">Shane Zhang 张亚华</div>
+        <div class="member-role">Adelaide University · SAF, aviation decarbonisation, AU–China engagement</div>
+      </div>
+    </div>
+    <div class="member-card">
+      <div class="member-avatar" style="background:#E8F4F1;color:#0B5E54">SD</div>
+      <div>
+        <div class="member-name">Steven Ducat 杜浚平</div>
+        <div class="member-role">SPD Energy CEO / RECAP China Director / CERS Carbon Neutrality Committee · EPC project delivery, smart grid integration, renewable energy systems</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 06 DAY 1 -->
+<section class="section" id="day1">
+  <div class="section-header">
+    <span class="section-num">06</span>
+    <h2 class="section-title">Day 1 — Foundations: Standards, Policy &amp; the Capital Flow Problem</h2>
+  </div>
+
+  <div class="day-header">
+    <span class="day-label">Day 1 · 19 November</span>
+    <span class="day-theme">Chinese industrial regulatory requirements as the new framework for the AU–China relationship — not selling, but collaborating on carbon transparency</span>
+  </div>
+  <table class="session-table">
+    <thead><tr>
+      <th class="time-col">Time</th>
+      <th style="width:45%">Session</th>
+      <th>ACETF Lead / Contributors</th>
+    </tr></thead>
+    <tbody>
+      <tr>
+        <td class="time-col">09:00</td>
+        <td>
+          <div class="session-title">Welcome &amp; framing</div>
+          <div class="session-desc">South Australia's energy transition leadership; why Green Bridges 2026 frames standards interoperability as the precondition for AU–CN–EU green trade; the A$386B green iron and SA SAF opportunities as the practical stakes</div>
+        </td>
+        <td><div class="lead-chips"><span class="chip chip-c">[AC] Chair</span><span class="chip chip-x">SA Minister for Energy</span></div></td>
+      </tr>
+      <tr>
+        <td class="time-col">09:30</td>
+        <td>
+          <div class="session-title">Keynote: China's Ecological &amp; Environmental Code — what Australian industry needs to know now</div>
+          <div class="session-desc">First-hand analysis of the Code's Green &amp; Low-Carbon Development chapter; statutory carbon market implications; supply chain traceability requirements; what Code compliance means for Australian green iron and SAF exporters from August 2026</div>
+          <div class="standards-note">This IS the standards session — every other session refers back to it</div>
+          <div class="money-note">Australian exporters unaware of Code requirements will lose procurement opportunities without knowing why</div>
+        </td>
+        <td><div class="lead-chips"><span class="chip chip-c">[HS] Chair</span><span class="chip chip-c">[AC] Panellist</span><span class="chip chip-x">Chinese env. law expert</span><span class="chip chip-x">Standards Australia</span></div></td>
+      </tr>
+      <tr>
+        <td class="time-col">10:10</td>
+        <td>
+          <div class="session-title">Keynote: Australia's Green Trade Strategy — from resources to certified value</div>
+          <div class="session-desc">Future Made in Australia; COP31 co-presidency; FIRB posture on Chinese industrial investment; green iron, hydrogen, and SAF as priority sectors; IMTO; Article 6; Carbon Markets alignment</div>
+        </td>
+        <td><div class="lead-chips"><span class="chip chip-x">Australian Climate &amp; Energy Minister or DCCEEW</span></div></td>
+      </tr>
+      <tr class="session-break"><td class="time-col">10:45</td><td colspan="2"><span class="break-label">Morning break &amp; networking</span></td></tr>
+      <tr>
+        <td class="time-col">11:00</td>
+        <td>
+          <div class="session-title">Session 1: Carbon Accounting Interoperability — GB/T, ISO 14064, ACCU &amp; the Road to Mutual Recognition</div>
+          <div class="session-desc">Navigating divergent frameworks; product carbon footprints and digital passports; MRV automation; what bilateral recognition would unlock for green iron, hydrogen, and SAF trade — and what the triple AU+CN+EU certification burden costs producers today</div>
+          <div class="standards-note">Carbon accounting is the foundation — without it, no green premium can be certified, traded, or recognised under CBAM</div>
+          <div class="money-note">Current triple-compliance burden estimated at 5–15% price discount on Australian green products</div>
+        </td>
+        <td><div class="lead-chips"><span class="chip chip-c">[YZ] Chair</span><span class="chip chip-c">[AC] Panellist</span><span class="chip chip-x">CNIS rep</span><span class="chip chip-x">Clean Energy Regulator</span></div></td>
+      </tr>
+      <tr>
+        <td class="time-col">11:50</td>
+        <td>
+          <div class="session-title">Session 2: Carbon Markets — China ETS, CBAM &amp; Cross-Border Financial Instruments</div>
+          <div class="session-desc">Statutory ETS upgrade; CCER methodology reform; cross-border price signals; tradeable decarbonisation instruments bridging AU and CN carbon pricing; what a green premium certificate needs to contain to be recognised in Beijing, Brussels, and Canberra simultaneously</div>
+          <div class="standards-note">Without recognised cross-border instruments, green premiums cannot be monetised — the financial incentive for standards alignment disappears</div>
+          <div class="money-note">CBAM price signal (~€55/tCO₂ in 2025) flows back through steel supply chains — creating Chinese demand for certified AU green iron</div>
+        </td>
+        <td><div class="lead-chips"><span class="chip chip-c">[HS] Chair</span><span class="chip chip-c">[RS] Panellist</span><span class="chip chip-x">China ETS registry</span><span class="chip chip-x">CBAM expert</span></div></td>
+      </tr>
+      <tr class="session-break"><td class="time-col">13:00</td><td colspan="2"><span class="break-label">Lunch &amp; poster sessions — academic presentations from ISETS member institutions</span></td></tr>
+      <tr>
+        <td class="time-col">14:00</td>
+        <td>
+          <div class="session-title">Session 3: Green Iron — The SA–Shandong Collaboration as a Replicable Model</div>
+          <div class="session-desc">Live case study structured as a deal debrief: what enabled this collaboration; FIRB and Treasury posture; the green HBI certification pathway; what standards work must happen before the first certified tonne moves; what makes this replicable for 10 more projects</div>
+          <div class="standards-note">Green HBI certification — ACCU methodology vs GB/T carbon accounting; MRV for DRI process; third-party verification acceptable to CBAM</div>
+          <div class="money-note">CBAM saves ~€94/tonne for certified green HBI vs conventional steel — this is the commercial case for standards alignment, in one number</div>
+        </td>
+        <td><div class="lead-chips"><span class="chip chip-k">Anchor session</span><span class="chip chip-c">[RS] Chair</span><span class="chip chip-c">[HT] Panellist</span><span class="chip chip-x">Shandong Iron &amp; Steel</span><span class="chip chip-x">Australian Treasury/FIRB</span><span class="chip chip-x">YG Group/NeoSmelt</span></div></td>
+      </tr>
+      <tr>
+        <td class="time-col">15:00</td>
+        <td>
+          <div class="session-title">Session 4: Energy Infrastructure — What Does Green Iron Actually Require?</div>
+          <div class="session-desc">An EAF draws ~550 kWh/tonne of steel; green hydrogen DRI requires ~3,000 kWh/tonne of process energy; a 1 Mt/yr green HBI facility needs 3+ TWh of renewable energy annually — equivalent to ~400 MW of continuous capacity. What does this mean for the grid, for storage, for hydrogen infrastructure, and for the bankability of the investment case?</div>
+          <div class="standards-note">Grid connection standards; hydrogen quality specifications (ISO 14687); energy measurement and verification for green premium claims</div>
+          <div class="money-note">CapEx for 1 Mt/yr green HBI precinct: A$7–12 billion. Renewable energy component alone: A$3–4 billion. Standards certainty directly reduces the risk premium on this capital.</div>
+        </td>
+        <td><div class="lead-chips"><span class="chip chip-c">[RS] Panellist</span><span class="chip chip-c">[SD] Panellist</span><span class="chip chip-x">ElectraNet/AEMO SA</span><span class="chip chip-x">HILTCRC/Superpower Institute</span><span class="chip chip-x">SA Hydrogen Jobs Plan</span></div></td>
+      </tr>
+      <tr class="session-break"><td class="time-col">15:50</td><td colspan="2"><span class="break-label">Afternoon break</span></td></tr>
+      <tr>
+        <td class="time-col">16:10</td>
+        <td>
+          <div class="session-title">Session 5: SA's Renewable Grid — Operating at the Frontier &amp; What China Can Learn</div>
+          <div class="session-desc">How SA manages 100%+ instantaneous renewable penetration; negative demand events; virtual power plants; system security without synchronous generation; lessons for Chinese grid operators in Qinghai, Gansu, and Inner Mongolia managing similar renewable integration challenges</div>
+          <div class="standards-note">Grid interconnection standards; VPP certification; demand response protocols — areas where AU operational experience can inform Chinese standard-setting</div>
+        </td>
+        <td><div class="lead-chips"><span class="chip chip-c">[SD] Panellist</span><span class="chip chip-c">[HT] China policy context</span><span class="chip chip-x">ElectraNet/AEMO SA</span><span class="chip chip-x">State Grid AI Lab</span></div></td>
+      </tr>
+      <tr class="session-break"><td class="time-col">17:00</td><td colspan="2"><span class="break-label">Day 1 close + networking drinks</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="infra-box">
+    <div class="infra-inner">
+      <div class="infra-hdr">Energy infrastructure reference — green iron precinct at scale</div>
+      <div class="infra-cells">
+        <div class="infra-cell">
+          <div class="infra-num">~550</div>
+          <div class="infra-unit">kWh / tonne of liquid steel</div>
+          <div class="infra-label">Electric Arc Furnace (EAF)</div>
+          <div class="infra-desc">Average EAF draw for HBI-fed steelmaking. Higher than scrap-fed EAF due to HBI energy content.</div>
+        </div>
+        <div class="infra-cell">
+          <div class="infra-num">~3,025</div>
+          <div class="infra-unit">kWh / tonne of DRI</div>
+          <div class="infra-label">Green Hydrogen DRI Process</div>
+          <div class="infra-desc">55 kg H₂/tonne DRI × 55 kWh/kg H₂ via electrolysis. Excludes compression and process heat.</div>
+        </div>
+        <div class="infra-cell">
+          <div class="infra-num">3+ TWh</div>
+          <div class="infra-unit">per year</div>
+          <div class="infra-label">1 Mt/yr Green HBI Facility</div>
+          <div class="infra-desc">~400 MW continuous renewable capacity + storage. A major grid commitment requiring coordinated infrastructure investment.</div>
+        </div>
+      </div>
+      <div class="infra-note">Indicative order-of-magnitude estimates for discussion. The point is scale: green iron is not a mine and a port — it is a coordinated renewable energy, hydrogen, and grid infrastructure investment of A$7–12 billion.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 07 DAY 2 -->
+<section class="section" id="day2">
+  <div class="section-header">
+    <span class="section-num">07</span>
+    <h2 class="section-title">Day 2 — SAF, Sectors &amp; the Project Pipeline</h2>
+  </div>
+
+  <div class="day-header">
+    <span class="day-label">Day 2 · 20 November</span>
+    <span class="day-theme">Where Australia competes — SAF and green commodities — and what standards gaps are blocking the capital from moving</span>
+  </div>
+  <table class="session-table">
+    <thead><tr>
+      <th class="time-col">Time</th>
+      <th style="width:45%">Session</th>
+      <th>ACETF Lead / Contributors</th>
+    </tr></thead>
+    <tbody>
+      <tr>
+        <td class="time-col">09:00</td>
+        <td>
+          <div class="session-title">Session 6: Sustainable Aviation Fuel — SA Feedstocks, China Routes &amp; the Certification Maze</div>
+          <div class="session-desc">China Southern (direct Adelaide–Guangzhou 3×/week), China Eastern, and Cathay Pacific operate SA–China routes with real and growing CORSIA carbon liabilities — estimated A$1M+ per year for China Southern's Adelaide services alone. South Australia has the feedstocks: tallow, waste cooking oil, agricultural residues. The barrier is certification: CORSIA accepts multiple schemes (ISCC, RSB) but China's own SAF certification is developing independently. Australian feedstocks cannot flow into Chinese airline SAF programs until these schemes mutually recognise each other. This session makes the bilateral case for joint certification work — with Adelaide's airlines in the room.</div>
+          <div class="standards-note">CORSIA sustainability criteria; ISCC vs Chinese SAF certification equivalence; feedstock provenance traceability; lifecycle carbon accounting for Australian tallow and WCO feedstocks</div>
+          <div class="money-note">China–Australia aviation: ~1M tCO₂/year. At US$50–100/tCO₂ CORSIA cost = US$50–100M/year liability for Chinese carriers on AU routes. SAF reduces 70–80% of this — if certification is right.</div>
+        </td>
+        <td><div class="lead-chips"><span class="chip chip-k">SAF anchor session</span><span class="chip chip-c">[SZ] Chair</span><span class="chip chip-c">[AC] Panellist</span><span class="chip chip-x">China Southern / China Eastern sustainability rep</span><span class="chip chip-x">CASRI</span><span class="chip chip-x">ISCC/RSB rep</span></div></td>
+      </tr>
+      <tr>
+        <td class="time-col">09:50</td>
+        <td>
+          <div class="session-title">Session 7: Green Hydrogen &amp; Ammonia — Australia's Export Architecture</div>
+          <div class="session-desc">Green hydrogen production economics in Australia; ammonia as the practical shipping form for hydrogen; Japanese, Korean, and Chinese demand trajectories; deep-water port requirements; the certification question — what does a 'green' hydrogen molecule need to prove, and to whom? Comparison of EU, Japanese, and Chinese hydrogen certification frameworks and where they diverge from each other and from Australian production realities</div>
+          <div class="standards-note">ISO 14687 hydrogen quality standards; green hydrogen certification (CertifHy, J-Credit, Chinese equivalent); ammonia quality specifications for energy use; MRV for electrolytic production</div>
+          <div class="money-note">Green hydrogen premium: ~3–5× cost of grey hydrogen. Standards mutual recognition eliminates re-certification cost estimated at 5–10% of delivered cost.</div>
+        </td>
+        <td><div class="lead-chips"><span class="chip chip-c">[RS] Chair</span><span class="chip chip-c">[HT] Panellist</span><span class="chip chip-x">ARENA/CEFC hydrogen rep</span><span class="chip chip-x">Chinese hydrogen industry rep</span></div></td>
+      </tr>
+      <tr class="session-break"><td class="time-col">10:40</td><td colspan="2"><span class="break-label">Morning break</span></td></tr>
+      <tr>
+        <td class="time-col">11:00</td>
+        <td>
+          <div class="session-title">Session 8: Critical Minerals — From Extraction to Certified Value</div>
+          <div class="session-desc">Australia's reserve position in lithium, cobalt, nickel, rare earths, and magnetite; the processing gap where Chinese refining expertise and Australian resources are complementary; mineral provenance and traceability requirements in EU Battery Passport, Chinese GB/T frameworks, and IRMA standards; FIRB investment pathways</div>
+          <div class="standards-note">IRMA mining standards; battery passport mineral provenance; GB/T 38151 for lithium battery materials; Australian Critical Minerals Strategy alignment with Chinese procurement frameworks</div>
+          <div class="money-note">EU Battery Regulation requires full supply chain carbon footprint from 2027. Australian miners without certified provenance will lose European and increasingly Chinese market access.</div>
+        </td>
+        <td><div class="lead-chips"><span class="chip chip-c">[CW] Chair</span><span class="chip chip-c">[AC] Panellist</span><span class="chip chip-x">Australian critical minerals company</span><span class="chip chip-x">NIMTE Ningbo</span></div></td>
+      </tr>
+      <tr>
+        <td class="time-col">11:50</td>
+        <td>
+          <div class="session-title">Session 9: Energy Security, Strategic Autonomy &amp; the Transition Imperative</div>
+          <div class="session-desc">The Strait of Hormuz as a live case study in fossil fuel supply chain vulnerability; clean energy as strategic autonomy for both Australia and China; the role of long-term certified offtake agreements in green commodity trade as a security architecture; what bilateral cooperation on energy security looks like in practice beyond policy language</div>
+          <div class="standards-note">Long-term contract frameworks; what certification standards must be in place before long-term green commodity offtake contracts can be written and enforced</div>
+        </td>
+        <td><div class="lead-chips"><span class="chip chip-c">[HT] Chair</span><span class="chip chip-c">[HS] Panellist</span><span class="chip chip-x">Australian strategic policy rep</span><span class="chip chip-x">Maritime/shipping industry</span></div></td>
+      </tr>
+      <tr class="session-break"><td class="time-col">12:40</td><td colspan="2"><span class="break-label">Lunch — facilitated industry roundtables: Green Iron &amp; Hydrogen / SAF &amp; Aviation / Critical Minerals Finance. Each table produces 3 concrete standards alignment priorities.</span></td></tr>
+      <tr>
+        <td class="time-col">13:40</td>
+        <td>
+          <div class="session-title">Session 10: Sustainable Finance — Making the Capital Flow</div>
+          <div class="session-desc">What Chinese industrial decarbonisation capital actually needs to see before it moves upstream to Australia: certified green products, bankable standards, recognised MRV, and a legal framework it trusts. FDI pathways; blended finance; green bonds; project pipeline from concept to investment-ready — with real project examples from green iron and SAF</div>
+          <div class="standards-note">Green bond standards (ICMA vs China Green Bond Standard); sustainability-linked loan criteria; TCFD/ISSB/Chinese disclosure equivalents; what certification a project needs before it is bankable to Chinese institutional investors</div>
+          <div class="money-note">Standards uncertainty adds 2–5% to cost of capital for Australian green projects. Mutual recognition framework could unlock A$10B+ in Chinese institutional investment in the SA green economy.</div>
+        </td>
+        <td><div class="lead-chips"><span class="chip chip-c">[CW] Chair</span><span class="chip chip-c">[RS] Panellist</span><span class="chip chip-c">[AC] Panellist</span><span class="chip chip-c">[SD] Panellist</span><span class="chip chip-x">CATL/Trina Solar</span><span class="chip chip-x">Australian infrastructure investor</span></div></td>
+      </tr>
+      <tr>
+        <td class="time-col">14:30</td>
+        <td>
+          <div class="session-title">Session 11: AI, Digital Infrastructure &amp; Automated MRV</div>
+          <div class="session-desc">How AI and digital infrastructure reduce the cost and increase the credibility of MRV across green supply chains; digital product passports; blockchain provenance; supply chain traceability — and why this makes standards interoperability commercially viable at scale without the compliance overhead that currently makes triple certification prohibitive</div>
+          <div class="standards-note">Digital product passport standards (EU Battery Regulation, ISO 22924); MRV automation certification; data sovereignty requirements when sharing supply chain data across AU–CN–EU borders</div>
+        </td>
+        <td><div class="lead-chips"><span class="chip chip-c">[YZ] Chair</span><span class="chip chip-x">CSIRO Data61</span><span class="chip chip-x">Chinese Academy of Sciences</span></div></td>
+      </tr>
+      <tr class="session-break"><td class="time-col">15:20</td><td colspan="2"><span class="break-label">Afternoon break</span></td></tr>
+      <tr>
+        <td class="time-col">15:40</td>
+        <td>
+          <div class="session-title">Closing plenary: Three standards alignment commitments before Green Bridges 2027</div>
+          <div class="session-desc">Rapporteur summary through a standards lens; committee presents draft Adelaide Declaration on Green Trade Standards Interoperability; each commitment is specific, named, and time-bound — not aspirational language. Commitment candidates: (1) green HBI mutual recognition framework, (2) SAF certification bilateral equivalence, (3) joint AU–CN carbon accounting working group</div>
+        </td>
+        <td><div class="lead-chips"><span class="chip chip-x">All committee members</span><span class="chip chip-x">Conference Chair</span></div></td>
+      </tr>
+      <tr>
+        <td class="time-col">16:30</td>
+        <td>
+          <div class="session-title">Adelaide Declaration on Green Trade Standards Interoperability — signing</div>
+          <div class="session-desc">Joint statement committing to specific bilateral standards alignment priorities across green iron, SAF, hydrogen, and critical minerals; co-signed by participating institutions from Australia and China</div>
+        </td>
+        <td><div class="lead-chips"><span class="chip chip-k">Signature output</span></div></td>
+      </tr>
+      <tr class="session-break"><td class="time-col">17:00</td><td colspan="2"><span class="break-label">Close</span></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- 08 QUESTIONS -->
+<section class="section" id="questions">
+  <div class="section-header">
+    <span class="section-num">08</span>
+    <h2 class="section-title">Questions for the Committee</h2>
+  </div>
+  <p>The following questions are proposed for discussion at the first committee meeting. Members are welcome to respond in advance by email to <strong>anthony@cetacea.global</strong></p>
+  <div class="question-card">
+    <div class="question-item">
+      <div class="question-num">1</div>
+      <div class="question-text"><strong>SAF as co-equal pillar:</strong> Does the committee agree that SAF should sit alongside green iron as a co-anchor of the forum — not a secondary session — and that the SA airline routes to China are the right economic foundation for making the case concrete?</div>
+    </div>
+    <div class="question-item">
+      <div class="question-num">2</div>
+      <div class="question-text"><strong>Standards as the through-line:</strong> Does the committee agree that standards interoperability should be the explicit framing of every session, with $/tCO₂e liabilities and CapEx figures stated throughout — and that this positions ACETF as providing intelligence rather than networking?</div>
+    </div>
+    <div class="question-item">
+      <div class="question-num">3</div>
+      <div class="question-text"><strong>AU–CN–EU triangle:</strong> Should the forum explicitly address the trilateral carbon transparency architecture — not just AU–CN bilateral — given that EU CBAM is the price signal that creates Chinese demand for certified Australian green iron?</div>
+    </div>
+    <div class="question-item">
+      <div class="question-num">4</div>
+      <div class="question-text"><strong>SA–Shandong anchor:</strong> Should Session 3 be structured as a live deal debrief — with Shandong Iron &amp; Steel and Treasury in the room — rather than a thematic panel? Which committee members have direct relationships with these parties?</div>
+    </div>
+    <div class="question-item">
+      <div class="question-num">5</div>
+      <div class="question-text"><strong>Energy infrastructure session:</strong> Is the quantitative framing (MWh per tonne of HBI) the right approach for Session 4? Anthony has direct relationships with ElectraNet, AEMO SA, and the SA DEM team — are committee members comfortable with him leveraging these for speaker invitations?</div>
+    </div>
+    <div class="question-item">
+      <div class="question-num">6</div>
+      <div class="question-text"><strong>Adelaide Declaration:</strong> Is a signed joint statement a realistic and desirable output? Which three specific standards alignment commitments are most achievable in the 12 months following the forum? The declaration should be specific enough to be embarrassing if not acted on.</div>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<div class="footer">
+  ACETF Managing Committee — First Meeting Preparation &nbsp;·&nbsp; Draft April 2026 &nbsp;·&nbsp; Not for external circulation
+</div>
+
+</body>
+</html>
